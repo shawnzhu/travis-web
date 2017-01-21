@@ -66,6 +66,7 @@
     "ember-resolver": "^2.0.3",
     "emberx-select": "~3.0.0",
     "glob": "^4.5.3",
+    "jsonwebtoken": "^7.2.1",
     "loader.js": "^4.0.10",
     "morgan": "^1.7.0",
     "visibilityjs": "^1.2.4"
