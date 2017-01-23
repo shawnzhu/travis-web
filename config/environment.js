@@ -85,6 +85,14 @@ module.exports = function (environment) {
     if (process.env.AUTH_ENDPOINT) {
       ENV.authEndpoint = process.env.AUTH_ENDPOINT;
     }
+
+    if (process.env.PUSHER_KEY) {
+      ENV.pusher.key = process.env.PUSHER_KEY;
+
+      if (process.env.PUSHER_SECRET) {
+        ENV.pusher.secret = process.env.PUSHER_SECRET;
+      }
+    }
   }
 
   if (environment === 'development') {
