@@ -1,0 +1,5 @@
+<ul>
+  {{#each artifacts as |artifact|}}
+    <li><button {{action "download" artifact preventDefault=false}}>{{artifact.Path}}</button></li>
+  {{/each}}
+</ul>

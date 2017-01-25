@@ -93,6 +93,10 @@ module.exports = function (environment) {
         ENV.pusher.secret = process.env.PUSHER_SECRET;
       }
     }
+
+    if (process.env.ARTIFACTS_ENDPOINT) {
+      ENV.artifactsEndpoint = process.env.ARTIFACTS_ENDPOINT;
+    }
   }
 
   if (environment === 'development') {

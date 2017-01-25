@@ -49,7 +49,7 @@ Router.map(function () {
       });
       this.route('job', { path: '/jobs/:job_id', resetNamespace: true }, function () {
         this.route('config');
-        this.route('artifacts', { path: '/artifacts', resetNamespace: true });
+        this.route('artifacts');
       });
       this.route('builds', { path: '/builds', resetNamespace: true });
       this.route('pullRequests', { path: '/pull_requests', resetNamespace: true });

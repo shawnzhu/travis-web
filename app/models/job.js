@@ -7,6 +7,7 @@ import Log from 'travis/models/log';
 import DurationCalculations from 'travis/mixins/duration-calculations';
 import attr from 'ember-data/attr';
 import { belongsTo } from 'ember-data/relationships';
+import config from 'travis/config/environment';
 
 const { service } = Ember.inject;
 
@@ -23,6 +24,7 @@ export default Model.extend(DurationCalculations, {
   repositoryPrivate: attr(),
   repositorySlug: attr(),
   _config: attr(),
+  _artifacts: attr(),
 
   repo: belongsTo('repo', { async: true }),
   build: belongsTo('build', { async: true }),
@@ -69,6 +71,25 @@ export default Model.extend(DurationCalculations, {
       }
       this.set('isFetchingConfig', true);
       return this.reload();
+    }
+  }),
+
+  artifacts: Ember.computed('_artifacts', function () {
+    let buildId, url, artifacts = this.get('_artifacts');
+
+    if (artifacts) {
+      return artifacts;
+    } else {
+      buildId = this.get('build').get('id');
+      url = `${config.artifactsEndpoint}/builds/${buildId}`;
+
+      return Ember.$.ajax(url, {
+        async: false,
+        dataType: 'json',
+        headers: {
+          Authorization: `bearer ${window.localStorage.getItem('travis.jwt')}`
+        }
+      }).responseJSON;
     }
   }),
 
