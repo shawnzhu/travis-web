@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Controller.extend({
   defaultBranch: Ember.computed('model', function () {
-    return this.get('model').filterBy('default_branch')[0];
+    return this.get('model').filterBy('default_branch').get('firstObject');
   }),
 
   branchesExist: Ember.computed.notEmpty('model'),

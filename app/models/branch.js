@@ -9,10 +9,8 @@ export default Model.extend({
   lastBuild: belongsTo('build'),
   exists_on_github: attr('boolean'),
 
+  repoId: Ember.computed.alias('repo.id'),
+
   builds: hasMany('builds', { inverse: 'branch' }),
   repo: belongsTo('repo', { inverse: 'defaultBranch' }),
-
-  repoId: Ember.computed('id', function () {
-    return this.get('id').split('/')[3];
-  })
 });

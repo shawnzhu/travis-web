@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import config from 'travis/config/environment';
+import computed from 'ember-computed-decorators';
 
 const { service } = Ember.inject;
 
@@ -15,32 +16,33 @@ export default Ember.Component.extend({
   isTriggering: false,
   hasTriggered: false,
 
-  urlGithubCommit: Ember.computed('branch.last_build', function () {
+  // eslint-ignore-next-line
+  urlGithubCommit: Ember.computed('branch.last_build.commit.sha', 'branch.repository.slug', function () {
     let slug = this.get('branch.repository.slug');
     let commitSha = this.get('branch.last_build.commit.sha');
+
     return this.get('externalLinks').githubCommit(slug, commitSha);
   }),
 
-  getLast5Builds: Ember.computed(function () {
-    let apiEndpoint, branchName, lastBuilds, options, repoId;
-    lastBuilds = Ember.ArrayProxy.create({
+  @computed('branch.{last_build,name}', 'repositoryId', 'auth.signedIn')
+  getLast5Builds(lastBuild, branchName, repositoryId, signedIn) {
+    let lastBuilds = Ember.ArrayProxy.create({
       content: [{}, {}, {}, {}, {}],
       isLoading: true,
       count: 0
     });
-    if (!this.get('branch.last_build')) {
+
+    if (!lastBuild) {
       lastBuilds.set('isLoading', false);
     } else {
-      apiEndpoint = config.apiEndpoint;
-      repoId = this.get('branch.repository.id');
-      branchName = this.get('branch.name');
-      options = {};
-      if (this.get('auth.signedIn')) {
+      let apiEndpoint = config.apiEndpoint;
+      let options = {};
+      if (signedIn) {
         options.headers = {
           Authorization: `token ${this.auth.token()}`
         };
       }
-      let path = `${apiEndpoint}/v3/repo/${repoId}/builds`;
+      let path = `${apiEndpoint}/v3/repo/${repositoryId}/builds`;
       let params = `?branch.name=${branchName}&limit=5&build.event_type=push,api,cron`;
       let url = `${path}${params}`;
 
@@ -63,7 +65,7 @@ export default Ember.Component.extend({
       });
     }
     return lastBuilds;
-  }),
+  },
 
   actions: {
     viewAllBuilds() {
